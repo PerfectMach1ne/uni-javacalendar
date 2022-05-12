@@ -5,8 +5,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.util.Collection;
-import java.util.HashMap;
 
 public class WeeksPanel extends JPanel {
     private final JPanel weekdayContainer;
@@ -42,7 +40,7 @@ public class WeeksPanel extends JPanel {
                 weekdayLabels.add(weekdayLabelArray[i]);
                 continue;
             }
-            weekdayLabelArray[i] = new JLabel(Main.weekdays[i - 1]) {
+            weekdayLabelArray[i] = new JLabel(StringConstants.weekdays[i - 1]) {
                 {
                     setFont(new Font("Arial", Font.BOLD, 24));
                     setPreferredSize(new Dimension(154, 50));

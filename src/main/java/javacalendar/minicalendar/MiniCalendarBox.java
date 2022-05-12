@@ -1,16 +1,15 @@
+package minicalendar;
+
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.geom.AffineTransform;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -30,7 +29,7 @@ public class MiniCalendarBox extends JPanel {
         internalPanel.setBackground(Color.lightGray);
 
         // First row
-        initializeFirstRowOfLabels(Main.weekdays);
+        initializeFirstRowOfLabels(StringConstants.weekdays);
         // Second row
 //        String[] secondRowLabels = new String[7]; // placeholder BUT also a potential implementation direction
 //        for (int i = 0; i < 7; i++) {
@@ -55,7 +54,7 @@ public class MiniCalendarBox extends JPanel {
                     }
                 }
                 // Use height and the fact, that:
-                // Dokładna wysokość czcionki w komponencie MiniCalendarBox = 9px
+                // Dokładna wysokość czcionki w komponencie minicalendar.MiniCalendarBox = 9px
                 // Dokładna wysokość of 1 grid and the Label inside it = 16px
                 // Ratio of font pixel size to Label standard height is 9 / 16 = 0.5625
                 // (9+Δy) = (16+Δx)*0.5625

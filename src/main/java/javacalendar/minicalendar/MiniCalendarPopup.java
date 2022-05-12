@@ -1,3 +1,5 @@
+package minicalendar;
+
 import javax.swing.JFrame;
 
 public class MiniCalendarPopup {

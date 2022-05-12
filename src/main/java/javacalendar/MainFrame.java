@@ -17,7 +17,6 @@ public class MainFrame extends JFrame {
         this.add(weeksPanel, BorderLayout.CENTER);
         this.add(leftBarPanel, BorderLayout.WEST);
         this.setJMenuBar(menuBar);
-//        this.pack();
 
         this.setVisible(true);
     }
