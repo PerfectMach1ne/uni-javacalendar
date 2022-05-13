@@ -1,4 +1,4 @@
-package javacalendar;
+package javacalendar.util;
 
 import java.awt.Color;
 

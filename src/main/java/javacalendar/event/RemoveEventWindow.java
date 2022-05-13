@@ -1,4 +1,6 @@
-package javacalendar;
+package javacalendar.event;
+
+import javacalendar.Main;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -25,10 +27,10 @@ public class RemoveEventWindow implements ActionListener {
     private final int horizontalGap = 5;
     private final int verticalGap = 5;
 
-    RemoveEventWindow() {
+    public RemoveEventWindow() {
         removeEventFrame.setBounds(0,0,100,150);
         removeEventFrame.setSize(new Dimension(300,175));
-        Main.alignWindowInCenter(removeEventFrame);
+        removeEventFrame.setLocationRelativeTo(null);
         removeEventFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         removeEventFrame.setResizable(false);
         removeEventFrame.setTitle("Delete an event");

@@ -1,10 +1,11 @@
-package javacalendar;
+package javacalendar.event;
 
 import javax.swing.JLabel;
 import java.awt.Color;
 
 import java.util.HashMap;
 
+import javacalendar.WeeksPanel;
 import javacalendar.util.Colors;
 
 public final class CalendarEventHandler extends WeeksPanel {

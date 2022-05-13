@@ -1,4 +1,4 @@
-package javacalendar;
+package javacalendar.util;
 
 public class StringConstants {
     StringConstants() {}

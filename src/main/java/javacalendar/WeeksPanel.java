@@ -1,3 +1,5 @@
+package javacalendar;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
@@ -5,6 +7,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+
+import javacalendar.util.StringConstants;
 
 public class WeeksPanel extends JPanel {
     private final JPanel weekdayContainer;

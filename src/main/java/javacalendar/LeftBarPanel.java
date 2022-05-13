@@ -1,4 +1,4 @@
-import minicalendar.MiniCalendarBox;
+package javacalendar;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -6,6 +6,11 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javacalendar.event.AddEventWindow;
+import javacalendar.event.ChangeEventWindow;
+import javacalendar.event.RemoveEventWindow;
+import javacalendar.minicalendar.MiniCalendarBox;
 
 public class LeftBarPanel extends JPanel implements ActionListener {
     private final JButton addEventButton;

@@ -1,4 +1,4 @@
-package javacalendar;
+package javacalendar.event;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -21,6 +21,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javacalendar.Main;
 import javacalendar.util.Colors;
 import javacalendar.util.LengthRestrictedDocument;
 import javacalendar.util.StringConstants;
@@ -50,10 +51,10 @@ public class AddEventWindow implements ActionListener, MouseListener {
     private final int horizontalGap = 5;
     private final int verticalGap = 5;
 
-    AddEventWindow() {
+    public AddEventWindow() {
         addEventFrame.setBounds(0,0,100,150);
         addEventFrame.setSize(new Dimension(300,450));
-        Main.alignWindowInCenter(addEventFrame);
+        addEventFrame.setLocationRelativeTo(null);
         addEventFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         addEventFrame.setResizable(false);
         addEventFrame.setTitle("Add a new event");

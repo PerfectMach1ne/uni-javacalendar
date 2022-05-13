@@ -1,4 +1,4 @@
-package javacalendar;
+package javacalendar.event;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -21,6 +21,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javacalendar.Main;
 import javacalendar.util.Colors;
 import javacalendar.util.LengthRestrictedDocument;
 import javacalendar.util.StringConstants;
@@ -56,10 +57,10 @@ public class ChangeEventWindow implements ActionListener, MouseListener {
     private final int horizontalGap = 5;
     private final int verticalGap = 5;
 
-    ChangeEventWindow() {
+    public ChangeEventWindow() {
         changeEventFrame.setBounds(0,0,100,150);
         changeEventFrame.setSize(new Dimension(325,500));
-        Main.alignWindowInCenter(changeEventFrame);
+        changeEventFrame.setLocationRelativeTo(null);
         changeEventFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         changeEventFrame.setResizable(false);
         changeEventFrame.setTitle("Change an event");

@@ -1,8 +1,9 @@
-package minicalendar;
+package javacalendar.minicalendar;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -10,8 +11,11 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+
+import javacalendar.util.StringConstants;
 
 public class MiniCalendarBox extends JPanel {
     private final JPanel internalPanel;
