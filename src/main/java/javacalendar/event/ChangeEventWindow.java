@@ -11,6 +11,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -18,15 +19,16 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javacalendar.Main;
 import javacalendar.util.Colors;
 import javacalendar.util.LengthRestrictedDocument;
 import javacalendar.util.StringConstants;
 
-public class ChangeEventWindow implements ActionListener, MouseListener {
+public class ChangeEventWindow implements ActionListener, MouseListener, KeyListener {
     private JFrame changeEventFrame = new JFrame();
 
     private JComboBox eventComboBox;
@@ -64,6 +66,9 @@ public class ChangeEventWindow implements ActionListener, MouseListener {
         changeEventFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         changeEventFrame.setResizable(false);
         changeEventFrame.setTitle("Change an event");
+
+        changeEventFrame.setFocusable(true);
+        changeEventFrame.addKeyListener(this);
 
         changeEventFrame.getContentPane().setLayout(new GridBagLayout());
         GridBagConstraints constraint = new GridBagConstraints();
@@ -242,6 +247,8 @@ public class ChangeEventWindow implements ActionListener, MouseListener {
         constraint.anchor = GridBagConstraints.PAGE_END;
 
         changeEventFrame.add(cancelButton, constraint);
+
+        makeEverythingFocusable();
     }
 
     @Override
@@ -467,4 +474,31 @@ public class ChangeEventWindow implements ActionListener, MouseListener {
         return -1;
     }
 
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            changeEventFrame.dispose();
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
+    }
+
+    private void makeEverythingFocusable() {
+        /* Ensures that all window components are focusable so that Swing focus subsystem doesn't prevent the window
+         * from being closed when it's not focused. */
+        Component[] windowComponents = { eventComboBox, eventNameTextField, eventDescriptionTextArea, weekdayComboBox,
+                colorComboBox, eventStartHours, eventStartMinutes, eventEndHours, eventEndMinutes };
+        for (Component c : windowComponents) {
+            c.setFocusable(true);
+            c.addKeyListener(this);
+        }
+    }
 }

@@ -1,7 +1,5 @@
 package javacalendar.event;
 
-import javacalendar.Main;
-
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -12,8 +10,10 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
-public class RemoveEventWindow implements ActionListener {
+public class RemoveEventWindow implements ActionListener, KeyListener {
     JFrame removeEventFrame = new JFrame();
 
     private JComboBox eventComboBox;
@@ -35,6 +35,9 @@ public class RemoveEventWindow implements ActionListener {
         removeEventFrame.setResizable(false);
         removeEventFrame.setTitle("Delete an event");
 
+        removeEventFrame.setFocusable(true);
+        removeEventFrame.addKeyListener(this);
+        
         removeEventFrame.getContentPane().setLayout(new GridBagLayout());
         GridBagConstraints constraint = new GridBagConstraints();
         constraint.insets = new Insets(horizontalGap, verticalGap, horizontalGap, verticalGap);
@@ -101,6 +104,9 @@ public class RemoveEventWindow implements ActionListener {
         constraint.anchor = GridBagConstraints.PAGE_END;
 
         removeEventFrame.add(cancelButton, constraint);
+
+        eventComboBox.setFocusable(true);
+        eventComboBox.addKeyListener(this);
     }
 
     @Override
@@ -134,5 +140,22 @@ public class RemoveEventWindow implements ActionListener {
                 return "Sunday";
         }
         return "undefined";
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            removeEventFrame.dispose();
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
     }
 }
