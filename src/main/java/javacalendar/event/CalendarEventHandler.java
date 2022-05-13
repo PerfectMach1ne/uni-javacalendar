@@ -1,6 +1,11 @@
+package javacalendar;
+
 import javax.swing.JLabel;
 import java.awt.Color;
+
 import java.util.HashMap;
+
+import javacalendar.util.Colors;
 
 public final class CalendarEventHandler extends WeeksPanel {
     public static HashMap<String, JLabel> eventStorage = new HashMap<>();

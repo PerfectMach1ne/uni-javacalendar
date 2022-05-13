@@ -1,3 +1,5 @@
+package javacalendar;
+
 public class StringConstants {
     StringConstants() {}
 
