@@ -80,7 +80,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
         } else if (e.getSource() == helpMenuItem1) {
             // new TutorialWindow
         } else if (e.getSource() == aboutMenuItem1) {
-            JOptionPane.showMessageDialog(Main.mainFrame, "[teskst tutaj aaaaa]","About Java Calendar", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(Main.mainFrame, "JavaCalendar something point o point o 2022","About Java Calendar", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 }

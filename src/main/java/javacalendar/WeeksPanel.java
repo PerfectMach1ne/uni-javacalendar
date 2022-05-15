@@ -1,3 +1,7 @@
+//
+// The worst class in the entire app.
+// Very likely overdue for a complete rewrite, because this is some stinky shit.
+//
 package javacalendar;
 
 import javax.swing.JLabel;
@@ -10,8 +14,6 @@ import java.awt.Font;
 
 import javacalendar.util.StringConstants;
 
-// The worst class in the entire app.
-// Very likely due to a complete rewrite, because this is some stinky shit.
 public class WeeksPanel extends JPanel {
     private final JPanel weekdayContainer;
     private final JPanel weekdayLabels;
@@ -92,7 +94,6 @@ public class WeeksPanel extends JPanel {
             {
                 setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
                 setBackground(Color.decode("#f3f6f4"));
-//                setBackground(Color.pink); // for testign xd
             }
 
         };
@@ -101,6 +102,7 @@ public class WeeksPanel extends JPanel {
         initializeWeekdayPanels();
     }
 
+    // Creates the
     private void initializeWeekdayPanels() {    // works
         for (int i = 0; i < 7; i++) {
             // "Variable 'i' is accessed from within inner class, needs to be final or effectively final"
