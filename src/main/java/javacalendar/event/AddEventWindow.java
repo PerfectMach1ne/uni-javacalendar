@@ -231,7 +231,7 @@ public class AddEventWindow implements ActionListener, MouseListener, KeyListene
             if (stringToWeekday(weekdayString) == -1) {
                 JOptionPane.showMessageDialog(addEventFrame, "An error occurred while parsing day of the week.",
                         "Input error", JOptionPane.ERROR_MESSAGE);
-                System.out.println("Error: String to weekday integer conversion returned -1");
+                System.out.println("Error: String to weekday integer conversion returned -1.");
                 addEventFrame.dispose();
             }
             String colorString = colorComboBox.getSelectedItem().toString();
@@ -239,66 +239,65 @@ public class AddEventWindow implements ActionListener, MouseListener, KeyListene
             // Check if proper hours have been entered
             boolean properTimeConditions;
             while(true) {
+                // This try-catch is for the most part identical to the one from ChangeEventWindow
+                // May try to work on eliminating that later
                 try {
-                    properTimeConditions = (Integer.parseInt( eventStartHours.getText()) >= 0 && Integer.parseInt(eventStartHours.getText()) < 24)
+                    // Ensures given hours and minutes are from correct integer intervals ([0,24] for hours, [0, 59] for minutes)
+                    properTimeConditions = (Integer.parseInt( eventStartHours.getText()) >= 0 && Integer.parseInt(eventStartHours.getText()) <= 24)
                             && (Integer.parseInt(eventStartMinutes.getText()) >= 0 && Integer.parseInt(eventStartMinutes.getText()) < 60)
-                            && (Integer.parseInt(eventEndHours.getText()) >= 0 && Integer.parseInt(eventEndHours.getText()) < 24)
+                            && (Integer.parseInt(eventEndHours.getText()) >= 0 && Integer.parseInt(eventEndHours.getText()) <= 24)
                             && (Integer.parseInt(eventEndMinutes.getText()) >= 0 && Integer.parseInt(eventEndMinutes.getText()) < 60);
                     if (!properTimeConditions) {
                         JOptionPane.showMessageDialog(addEventFrame, "Please enter a proper time!",
                                 "Input error", JOptionPane.ERROR_MESSAGE);
                         break;
                     } else {
-                        boolean isBroken = false;
                         String fixedStartHours = eventStartHours.getText();
                         String fixedStartMinutes = eventStartMinutes.getText();
                         String fixedEndHours = eventEndHours.getText();
                         String fixedEndMinutes = eventEndMinutes.getText();
+                        // Add a leading zero if the given hour/minute integer is from an interval of [0,9]
                         if (Integer.parseInt(eventStartHours.getText()) < 10) {
                             fixedStartHours = "0".concat(Integer.toString(Integer.parseInt(eventStartHours.getText())));
-                            isBroken = true;
                         }
                         if (Integer.parseInt(eventStartMinutes.getText()) < 10) {
                             fixedStartMinutes = "0".concat(Integer.toString(Integer.parseInt(eventStartMinutes.getText())));
-                            isBroken = true;
                         }
                         if (Integer.parseInt(eventEndHours.getText()) < 10) {
                             fixedEndHours = "0".concat(Integer.toString(Integer.parseInt(eventEndHours.getText())));
-                            isBroken = true;
                         }
                         if (Integer.parseInt(eventEndMinutes.getText()) < 10) {
                             fixedEndMinutes = "0".concat(Integer.toString(Integer.parseInt(eventEndMinutes.getText())));
-
-                            isBroken = true;
                         }
-                        if (isBroken) {
-                            String eventStartTime = fixedStartHours + ":" + fixedStartMinutes;
-                            String eventEndTime = fixedEndHours + ":" + fixedEndMinutes;
-                            String editedEventKey = CalendarEventHandler.getEventKey(stringToWeekday(weekdayString), eventNameTextField.getText(),
-                                    CalendarEventHandler.processHoursIntoEventStartValue(eventStartTime),
-                                    CalendarEventHandler.processHoursIntoEventEndValue(eventEndTime));
-                            if ( !CalendarEventHandler.eventStorage.containsKey(editedEventKey) ) {
-                                CalendarEventHandler.addCalendarEvent(stringToWeekday(weekdayString), eventNameTextField.getText(),
-                                        eventDescriptionTextArea.getText(), actualColor,
-                                        Colors.getColorFromName(colorString).getProperTextColor(), eventStartTime, eventEndTime);
-                            }
-                            addEventFrame.dispose();
+                        // Interprets 24:mm as 00:mm
+                        if (Integer.parseInt(eventStartHours.getText()) == 24) {
+                            fixedStartHours = "00";
                         }
+                        if (Integer.parseInt(eventEndHours.getText()) == 24) {
+                            fixedEndHours = "00";
+                        }
+                        // Final end & start time formatting
                         String eventStartTime = fixedStartHours + ":" + fixedStartMinutes;
                         String eventEndTime = fixedEndHours + ":" + fixedEndMinutes;
-                        String editedEventKey = CalendarEventHandler.getEventKey(stringToWeekday(weekdayString), eventNameTextField.getText(),
+                        String eventKey = CalendarEventHandler.getEventKey(stringToWeekday(weekdayString), eventNameTextField.getText(),
                                 CalendarEventHandler.processHoursIntoEventStartValue(eventStartTime),
                                 CalendarEventHandler.processHoursIntoEventEndValue(eventEndTime));
-                        // Naprawia bug gdzie zdarzenia wstawiają się podwójnie
-                        if ( !CalendarEventHandler.eventStorage.containsKey(editedEventKey) ) {
+                        // This condition check fixes a bug where events get added twice
+                        if ( !CalendarEventHandler.eventStorage.containsKey(eventKey) ) {
+                            // Actually add the event
                             CalendarEventHandler.addCalendarEvent(stringToWeekday(weekdayString), eventNameTextField.getText(),
                                     eventDescriptionTextArea.getText(), actualColor,
                                     Colors.getColorFromName(colorString).getProperTextColor(), eventStartTime, eventEndTime);
+                        } else {
+                            JOptionPane.showMessageDialog(addEventFrame, "This event already exists!",
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+                            break;
                         }
                         addEventFrame.dispose();
                         break;
                     }
                 } catch (NumberFormatException nfe) {
+                    // This happens when user types something like "xd" instead of an integer in the text field
                     JOptionPane.showMessageDialog(addEventFrame, "Please enter a proper time!",
                             "Input error", JOptionPane.ERROR_MESSAGE);
                     nfe.addSuppressed(nfe); // Suppress the exception to prevent it from an endless while(true) loop

@@ -289,7 +289,7 @@ public class ChangeEventWindow implements ActionListener, MouseListener, KeyList
             if (stringToWeekday(weekdayString) == -1) {
                 JOptionPane.showMessageDialog(changeEventFrame, "An error occurred while parsing day of the week.",
                         "Input error", JOptionPane.ERROR_MESSAGE);
-                System.out.println("Error: String to weekday integer conversion returned -1");
+                System.out.println("Error: String to weekday integer conversion returned -1.");
                 changeEventFrame.dispose();
             }
             String colorString = colorComboBox.getSelectedItem().toString();
@@ -297,79 +297,66 @@ public class ChangeEventWindow implements ActionListener, MouseListener, KeyList
             // Check if proper hours have been entered
             boolean properTimeConditions;
             while(true) {
+                // This try-catch is for the most part identical to the one from AddEventWindow
+                // Might try to fix that later
                 try {
-                    properTimeConditions = (Integer.parseInt( eventStartHours.getText()) >= 0 && Integer.parseInt(eventStartHours.getText()) < 24)
+                    // Ensures given hours and minutes are from correct integer intervals ([0,24] for hours, [0, 59] for minutes)
+                    properTimeConditions = (Integer.parseInt( eventStartHours.getText()) >= 0 && Integer.parseInt(eventStartHours.getText()) <= 24)
                             && (Integer.parseInt(eventStartMinutes.getText()) >= 0 && Integer.parseInt(eventStartMinutes.getText()) < 60)
-                            && (Integer.parseInt(eventEndHours.getText()) >= 0 && Integer.parseInt(eventEndHours.getText()) < 24)
+                            && (Integer.parseInt(eventEndHours.getText()) >= 0 && Integer.parseInt(eventEndHours.getText()) <= 24)
                             && (Integer.parseInt(eventEndMinutes.getText()) >= 0 && Integer.parseInt(eventEndMinutes.getText()) < 60);
                     if (!properTimeConditions) {
                         JOptionPane.showMessageDialog(changeEventFrame, "Please enter a proper time!",
                                 "Input error", JOptionPane.ERROR_MESSAGE);
                         break;
                     } else {
-                        boolean isBroken = false;
                         String fixedStartHours = eventStartHours.getText();
                         String fixedStartMinutes = eventStartMinutes.getText();
                         String fixedEndHours = eventEndHours.getText();
                         String fixedEndMinutes = eventEndMinutes.getText();
+                        // Add a leading zero if the given hour/minute integer is from an interval of [0,9]
                         if (Integer.parseInt(eventStartHours.getText()) < 10) {
                             fixedStartHours = "0".concat(Integer.toString(Integer.parseInt(eventStartHours.getText())));
-                            isBroken = true;
                         }
                         if (Integer.parseInt(eventStartMinutes.getText()) < 10) {
                             fixedStartMinutes = "0".concat(Integer.toString(Integer.parseInt(eventStartMinutes.getText())));
-                            isBroken = true;
                         }
                         if (Integer.parseInt(eventEndHours.getText()) < 10) {
                             fixedEndHours = "0".concat(Integer.toString(Integer.parseInt(eventEndHours.getText())));
-                            isBroken = true;
                         }
                         if (Integer.parseInt(eventEndMinutes.getText()) < 10) {
                             fixedEndMinutes = "0".concat(Integer.toString(Integer.parseInt(eventEndMinutes.getText())));
+                        }
+                        // Interprets 24:mm as 00:mm
+                        if (Integer.parseInt(eventStartHours.getText()) == 24) {
+                            fixedStartHours = "00";
+                        }
+                        if (Integer.parseInt(eventEndHours.getText()) == 24) {
+                            fixedEndHours = "00";
+                        }
 
-                            isBroken = true;
-                        }
-                        if (isBroken) {
-                            // Dispose of the old event in style
-                            if ( CalendarEventHandler.eventStorage.containsKey(eventToRemoveKey) ) {
-                                CalendarEventHandler.removeCalendarEventByHashKey(eventToRemoveKey);
-                            }
-                            // Actually add the event
-                            String eventStartTime = fixedStartHours + ":" + fixedStartMinutes;
-                            String eventEndTime = fixedEndHours + ":" + fixedEndMinutes;
-                            String editedEventKey = CalendarEventHandler.getEventKey(stringToWeekday(weekdayString), eventNameTextField.getText(),
-                                    CalendarEventHandler.processHoursIntoEventStartValue(eventStartTime),
-                                    CalendarEventHandler.processHoursIntoEventEndValue(eventEndTime));
-                            // Naprawia bug gdzie zdarzenia wstawiają się podwójnie
-                            if ( !CalendarEventHandler.eventStorage.containsKey(editedEventKey) ) {
-                                CalendarEventHandler.addCalendarEvent(stringToWeekday(weekdayString), eventNameTextField.getText(),
-                                        eventDescriptionTextArea.getText(), actualColor,
-                                        Colors.getColorFromName(colorString).getProperTextColor(), eventStartTime, eventEndTime);
-                            }
-                            System.out.println("Added the event from isBroken try block");
-                            changeEventFrame.dispose();
-                        }
                         // Dispose of the old event in style
                         if ( CalendarEventHandler.eventStorage.containsKey(eventToRemoveKey) ) {
                             CalendarEventHandler.removeCalendarEventByHashKey(eventToRemoveKey);
                         }
-                        // Actually add the event
+                        // Final end & start time formatting
                         String eventStartTime = fixedStartHours + ":" + fixedStartMinutes;
                         String eventEndTime = fixedEndHours + ":" + fixedEndMinutes;
                         String editedEventKey = CalendarEventHandler.getEventKey(stringToWeekday(weekdayString), eventNameTextField.getText(),
                                 CalendarEventHandler.processHoursIntoEventStartValue(eventStartTime),
                                 CalendarEventHandler.processHoursIntoEventEndValue(eventEndTime));
-                        // Naprawia bug gdzie zdarzenia wstawiają się podwójnie
+                        // This condition check fixes a bug where events get added twice
                         if ( !CalendarEventHandler.eventStorage.containsKey(editedEventKey) ) {
+                            // Actually add the event
                             CalendarEventHandler.addCalendarEvent(stringToWeekday(weekdayString), eventNameTextField.getText(),
                                     eventDescriptionTextArea.getText(), actualColor,
                                     Colors.getColorFromName(colorString).getProperTextColor(), eventStartTime, eventEndTime);
                         }
-                        System.out.println("Added the event from main try block");
                         changeEventFrame.dispose();
                         break;
                     }
                 } catch (NumberFormatException nfe) {
+                    // This happens when user types something like "xd" instead of an integer in the text field
                     JOptionPane.showMessageDialog(changeEventFrame, "Please enter a proper time!",
                             "Input error", JOptionPane.ERROR_MESSAGE);
                     nfe.addSuppressed(nfe); // Suppress the exception to prevent it from an endless while(true) loop

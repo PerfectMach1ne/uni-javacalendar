@@ -10,6 +10,8 @@ import java.awt.Font;
 
 import javacalendar.util.StringConstants;
 
+// The worst class in the entire app.
+// Very likely due to a complete rewrite, because this is some stinky shit.
 public class WeeksPanel extends JPanel {
     private final JPanel weekdayContainer;
     private final JPanel weekdayLabels;
@@ -33,9 +35,13 @@ public class WeeksPanel extends JPanel {
         this.add(weekdayLabels, BorderLayout.NORTH);
 
         // Label the days of the week
+        /* This is disgusting but it allows the JLabels to at least imitate correct position.
+           I have to fix this in the future, because this feels more criminal than using fflush(stdin)
+           in my 120 minute C programming class test, in January 2021.
+        */
         for (int i = 0; i < 8; i++) {
             if (i == 0) {
-                weekdayLabelArray[i] = new JLabel("") { // to jest obrzydliwe ale umożliwia poprawne ułożenie JLabeli
+                weekdayLabelArray[i] = new JLabel("") {
                     {
                         setFont(new Font("Arial", Font.BOLD, 24));
                         setPreferredSize(new Dimension(50, 50));
