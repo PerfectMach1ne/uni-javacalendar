@@ -302,43 +302,6 @@ public class AddEventWindow implements ActionListener, MouseListener, KeyListene
                     JOptionPane.showMessageDialog(addEventFrame, "Please enter a proper time!",
                             "Input error", JOptionPane.ERROR_MESSAGE);
                     nfe.addSuppressed(nfe); // Suppress the exception to prevent it from an endless while(true) loop
-
-                    boolean isBroken = false;
-                    String fixedStartHours = eventStartHours.getText();
-                    String fixedStartMinutes = eventStartMinutes.getText();
-                    String fixedEndHours = eventEndHours.getText();
-                    String fixedEndMinutes = eventEndMinutes.getText();
-                    if (Integer.parseInt(eventStartHours.getText()) < 10) {
-                        fixedStartHours = "0".concat(Integer.toString(Integer.parseInt(eventStartHours.getText())));
-                        isBroken = true;
-                    }
-                    if (Integer.parseInt(eventStartMinutes.getText()) < 10) {
-                        fixedStartMinutes = "0".concat(Integer.toString(Integer.parseInt(eventStartMinutes.getText())));
-                        isBroken = true;
-                    }
-                    if (Integer.parseInt(eventEndHours.getText()) < 10) {
-                        fixedEndHours = "0".concat(Integer.toString(Integer.parseInt(eventEndHours.getText())));
-                        System.out.println(fixedEndHours);
-                        isBroken = true;
-                    }
-                    if (Integer.parseInt(eventEndMinutes.getText()) < 10) {
-                        fixedEndMinutes = "0".concat(Integer.toString(Integer.parseInt(eventEndMinutes.getText())));
-                        System.out.println(fixedEndMinutes);
-                        isBroken = true;
-                    }
-                    if (isBroken) {
-                        String eventStartTime = fixedStartHours + ":" + fixedStartMinutes;
-                        String eventEndTime = fixedEndHours + ":" + fixedEndMinutes;
-                        String editedEventKey = CalendarEventHandler.getEventKey(stringToWeekday(weekdayString), eventNameTextField.getText(),
-                                CalendarEventHandler.processHoursIntoEventStartValue(eventStartTime),
-                                CalendarEventHandler.processHoursIntoEventEndValue(eventEndTime));
-                        if ( !CalendarEventHandler.eventStorage.containsKey(editedEventKey) ) {
-                            CalendarEventHandler.addCalendarEvent(stringToWeekday(weekdayString), eventNameTextField.getText(),
-                                    eventDescriptionTextArea.getText(), actualColor,
-                                    Colors.getColorFromName(colorString).getProperTextColor(), eventStartTime, eventEndTime);
-                        }
-                        addEventFrame.dispose();
-                    }
                 }
             }
         } else if ( e.getSource() == cancelButton ) {
