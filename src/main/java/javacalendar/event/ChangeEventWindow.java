@@ -27,6 +27,7 @@ import java.awt.event.MouseListener;
 import javacalendar.util.Colors;
 import javacalendar.util.LengthRestrictedDocument;
 import javacalendar.util.StringConstants;
+import javacalendar.util.WeekdayMethods;
 
 public class ChangeEventWindow implements ActionListener, MouseListener, KeyListener {
     private JFrame changeEventFrame = new JFrame();
@@ -87,11 +88,11 @@ public class ChangeEventWindow implements ActionListener, MouseListener, KeyList
             eventKeys[i] = key;
             i++;
         } i = 0;
-        // Zamienia dni tygodnia z liczb od 0 do 6 na pełne angielskie nazwy
+        // Converts integers from [0,6] interval to days of the week
         for (String eventName : eventNames) {
             String key = eventKeys[i];
             int day = Integer.parseInt(String.valueOf(key.charAt(0)));
-            parsedEventNames[i] = eventName + " (" + weekdayToString(day) + ")";
+            parsedEventNames[i] = eventName + " (" + WeekdayMethods.weekdayToString(day) + ")";
             i++;
         }
 
@@ -286,8 +287,8 @@ public class ChangeEventWindow implements ActionListener, MouseListener, KeyList
         if ( e.getSource() == confirmButton ) {
             String weekdayString = weekdayComboBox.getSelectedItem().toString();
             // Check if day of the week is correct (very, very important)
-            if (stringToWeekday(weekdayString) == -1) {
-                JOptionPane.showMessageDialog(changeEventFrame, "An error occurred while parsing day of the week.",
+            if (WeekdayMethods.stringToWeekday(weekdayString) == -1) {
+                JOptionPane.showMessageDialog(null, "An error occurred while parsing day of the week.",
                         "Input error", JOptionPane.ERROR_MESSAGE);
                 System.out.println("Error: String to weekday integer conversion returned -1.");
                 changeEventFrame.dispose();
@@ -306,7 +307,7 @@ public class ChangeEventWindow implements ActionListener, MouseListener, KeyList
                             && (Integer.parseInt(eventEndHours.getText()) >= 0 && Integer.parseInt(eventEndHours.getText()) <= 24)
                             && (Integer.parseInt(eventEndMinutes.getText()) >= 0 && Integer.parseInt(eventEndMinutes.getText()) < 60);
                     if (!properTimeConditions) {
-                        JOptionPane.showMessageDialog(changeEventFrame, "Please enter a proper time!",
+                        JOptionPane.showMessageDialog(null, "Please enter a proper time!",
                                 "Input error", JOptionPane.ERROR_MESSAGE);
                         break;
                     } else {
@@ -342,13 +343,13 @@ public class ChangeEventWindow implements ActionListener, MouseListener, KeyList
                         // Final end & start time formatting
                         String eventStartTime = fixedStartHours + ":" + fixedStartMinutes;
                         String eventEndTime = fixedEndHours + ":" + fixedEndMinutes;
-                        String editedEventKey = CalendarEventHandler.getEventKey(stringToWeekday(weekdayString), eventNameTextField.getText(),
+                        String editedEventKey = CalendarEventHandler.getEventKey(WeekdayMethods.stringToWeekday(weekdayString), eventNameTextField.getText(),
                                 CalendarEventHandler.processHoursIntoEventStartValue(eventStartTime),
                                 CalendarEventHandler.processHoursIntoEventEndValue(eventEndTime));
                         // This condition check fixes a bug where events get added twice
                         if ( !CalendarEventHandler.eventStorage.containsKey(editedEventKey) ) {
                             // Actually add the event
-                            CalendarEventHandler.addCalendarEvent(stringToWeekday(weekdayString), eventNameTextField.getText(),
+                            CalendarEventHandler.addCalendarEvent(WeekdayMethods.stringToWeekday(weekdayString), eventNameTextField.getText(),
                                     eventDescriptionTextArea.getText(), actualColor,
                                     Colors.getColorFromName(colorString).getProperTextColor(), eventStartTime, eventEndTime);
                         }
@@ -357,7 +358,7 @@ public class ChangeEventWindow implements ActionListener, MouseListener, KeyList
                     }
                 } catch (NumberFormatException nfe) {
                     // This happens when user types something like "xd" instead of an integer in the text field
-                    JOptionPane.showMessageDialog(changeEventFrame, "Please enter a proper time!",
+                    JOptionPane.showMessageDialog(null, "Please enter a proper time!",
                             "Input error", JOptionPane.ERROR_MESSAGE);
                     nfe.addSuppressed(nfe); // Suppress the exception to prevent it from an endless while(true) loop
                 }
@@ -375,46 +376,6 @@ public class ChangeEventWindow implements ActionListener, MouseListener, KeyList
     @Override
     public void mouseExited(MouseEvent e) {
 
-    }
-
-    private String weekdayToString(int weekday) {
-        switch (weekday) {
-            case 0:
-                return "Monday";
-            case 1:
-                return "Tuesday";
-            case 2:
-                return "Wednesday";
-            case 3:
-                return "Thursday";
-            case 4:
-                return "Friday";
-            case 5:
-                return "Saturday";
-            case 6:
-                return "Sunday";
-        }
-        return "undefined";
-    }
-
-    private int stringToWeekday(String weekday) {
-        switch (weekday) {
-            case "Mon":
-                return 0;
-            case "Tue":
-                return 1;
-            case "Wed":
-                return 2;
-            case "Thu":
-                return 3;
-            case "Fri":
-                return 4;
-            case "Sat":
-                return 5;
-            case "Sun":
-                return 6;
-        }
-        return -1;
     }
 
     @Override

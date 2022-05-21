@@ -1,5 +1,7 @@
 package javacalendar.event;
 
+import javacalendar.util.WeekdayMethods;
+
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -59,7 +61,7 @@ public class RemoveEventWindow implements ActionListener, KeyListener {
         for (String eventName : eventNames) {
             String key = eventKeys[i];
             int day = Integer.parseInt(String.valueOf(key.charAt(0)));
-            parsedEventNames[i] = eventName + " (" + weekdayToString(day) + ")";
+            parsedEventNames[i] = eventName + " (" + WeekdayMethods.weekdayToString(day) + ")";
             i++;
         }
 
@@ -120,26 +122,6 @@ public class RemoveEventWindow implements ActionListener, KeyListener {
         } else if ( e.getSource() == cancelButton ) {
             removeEventFrame.dispose();
         }
-    }
-
-    private String weekdayToString(int weekday) {
-        switch (weekday) {
-            case 0:
-                return "Monday";
-            case 1:
-                return "Tuesday";
-            case 2:
-                return "Wednesday";
-            case 3:
-                return "Thursday";
-            case 4:
-                return "Friday";
-            case 5:
-                return "Saturday";
-            case 6:
-                return "Sunday";
-        }
-        return "undefined";
     }
 
     @Override

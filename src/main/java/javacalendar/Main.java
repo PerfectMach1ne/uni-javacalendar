@@ -1,36 +1,37 @@
 package javacalendar;
 
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 import java.awt.BorderLayout;
 
 public class Main {
-    public static JFrame mainFrame;
+    private final JFrame mainWindow;
 
-    private static void createMainFrame() {
-        mainFrame = new JFrame("JavaCalendar");
-        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        mainFrame.setLayout(new BorderLayout());
-        mainFrame.setResizable(false);
-        mainFrame.setSize(1400,850);
+    public static final int WINDOW_WIDTH = 1400;
+    public static final int WINDOW_HEIGHT = 850;
 
+    public Main() {
+        mainWindow = new JFrame("JavaCalendar");
+        mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainWindow.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+
+        mainWindow.setLayout(new BorderLayout());
         addMainComponents();
 
-        mainFrame.setVisible(true);
-        mainFrame.setLocationRelativeTo(null);  /* Placing this after making the frame visible prevents it from getting
-                                                 * sent to the bottom right corner for some reason */
+        mainWindow.setLocationRelativeTo(null);
     }
 
-    private static void addMainComponents() {
-        WeeksPanel weeksPanel = new WeeksPanel();
-        LeftBarPanel leftBarPanel = new LeftBarPanel();
-        MenuBar menuBar = new MenuBar();
-
-        mainFrame.add(weeksPanel, BorderLayout.CENTER);
-        mainFrame.add(leftBarPanel, BorderLayout.WEST);
-        mainFrame.setJMenuBar(menuBar);
+    private void addMainComponents() {
+        mainWindow.add(new WeeksPanel(), BorderLayout.CENTER);
+        mainWindow.add(new LeftBarPanel(), BorderLayout.WEST);
+        mainWindow.setJMenuBar(new MenuBar());
     }
 
     public static void main(String[] args) {
-        javax.swing.SwingUtilities.invokeLater(Main::createMainFrame);
+        SwingUtilities.invokeLater(() -> {
+            Main window = new Main();
+            window.mainWindow.setVisible(true);
+        });
     }
+
 }

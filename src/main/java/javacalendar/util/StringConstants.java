@@ -1,6 +1,6 @@
 package javacalendar.util;
 
-public class StringConstants {
+public final class StringConstants {
     StringConstants() {}
 
     public final static String[] comboBoxColorNames = {"Pink", "Red", "Orange", "Yellow", "Light green", "Green", "Light blue", "Blue",

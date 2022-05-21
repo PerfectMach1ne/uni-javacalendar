@@ -27,6 +27,7 @@ import java.awt.event.MouseListener;
 import javacalendar.util.Colors;
 import javacalendar.util.LengthRestrictedDocument;
 import javacalendar.util.StringConstants;
+import javacalendar.util.WeekdayMethods;
 
 public class AddEventWindow implements ActionListener, MouseListener, KeyListener {
     private JFrame addEventFrame = new JFrame();
@@ -228,8 +229,8 @@ public class AddEventWindow implements ActionListener, MouseListener, KeyListene
         if ( e.getSource() == confirmButton ) {
             String weekdayString = weekdayComboBox.getSelectedItem().toString();
             // Check if day of the week is correct (very, very important)
-            if (stringToWeekday(weekdayString) == -1) {
-                JOptionPane.showMessageDialog(addEventFrame, "An error occurred while parsing day of the week.",
+            if (WeekdayMethods.stringToWeekday(weekdayString) == -1) {
+                JOptionPane.showMessageDialog(null, "An error occurred while parsing day of the week.",
                         "Input error", JOptionPane.ERROR_MESSAGE);
                 System.out.println("Error: String to weekday integer conversion returned -1.");
                 addEventFrame.dispose();
@@ -248,7 +249,7 @@ public class AddEventWindow implements ActionListener, MouseListener, KeyListene
                             && (Integer.parseInt(eventEndHours.getText()) >= 0 && Integer.parseInt(eventEndHours.getText()) <= 24)
                             && (Integer.parseInt(eventEndMinutes.getText()) >= 0 && Integer.parseInt(eventEndMinutes.getText()) < 60);
                     if (!properTimeConditions) {
-                        JOptionPane.showMessageDialog(addEventFrame, "Please enter a proper time!",
+                        JOptionPane.showMessageDialog(null, "Please enter a proper time!",
                                 "Input error", JOptionPane.ERROR_MESSAGE);
                         break;
                     } else {
@@ -279,17 +280,17 @@ public class AddEventWindow implements ActionListener, MouseListener, KeyListene
                         // Final end & start time formatting
                         String eventStartTime = fixedStartHours + ":" + fixedStartMinutes;
                         String eventEndTime = fixedEndHours + ":" + fixedEndMinutes;
-                        String eventKey = CalendarEventHandler.getEventKey(stringToWeekday(weekdayString), eventNameTextField.getText(),
+                        String eventKey = CalendarEventHandler.getEventKey(WeekdayMethods.stringToWeekday(weekdayString), eventNameTextField.getText(),
                                 CalendarEventHandler.processHoursIntoEventStartValue(eventStartTime),
                                 CalendarEventHandler.processHoursIntoEventEndValue(eventEndTime));
                         // This condition check fixes a bug where events get added twice
                         if ( !CalendarEventHandler.eventStorage.containsKey(eventKey) ) {
                             // Actually add the event
-                            CalendarEventHandler.addCalendarEvent(stringToWeekday(weekdayString), eventNameTextField.getText(),
+                            CalendarEventHandler.addCalendarEvent(WeekdayMethods.stringToWeekday(weekdayString), eventNameTextField.getText(),
                                     eventDescriptionTextArea.getText(), actualColor,
                                     Colors.getColorFromName(colorString).getProperTextColor(), eventStartTime, eventEndTime);
                         } else {
-                            JOptionPane.showMessageDialog(addEventFrame, "This event already exists!",
+                            JOptionPane.showMessageDialog(null, "This event already exists!",
                                     "Error", JOptionPane.ERROR_MESSAGE);
                             break;
                         }
@@ -298,7 +299,7 @@ public class AddEventWindow implements ActionListener, MouseListener, KeyListene
                     }
                 } catch (NumberFormatException nfe) {
                     // This happens when user types something like "xd" instead of an integer in the text field
-                    JOptionPane.showMessageDialog(addEventFrame, "Please enter a proper time!",
+                    JOptionPane.showMessageDialog(null, "Please enter a proper time!",
                             "Input error", JOptionPane.ERROR_MESSAGE);
                     nfe.addSuppressed(nfe); // Suppress the exception to prevent it from an endless while(true) loop
                 }
@@ -316,26 +317,6 @@ public class AddEventWindow implements ActionListener, MouseListener, KeyListene
     @Override
     public void mouseExited(MouseEvent e) {
 
-    }
-
-    private int stringToWeekday(String weekday) {
-        switch (weekday) {
-            case "Mon":
-                return 0;
-            case "Tue":
-                return 1;
-            case "Wed":
-                return 2;
-            case "Thu":
-                return 3;
-            case "Fri":
-                return 4;
-            case "Sat":
-                return 5;
-            case "Sun":
-                return 6;
-        }
-        return -1;
     }
 
     @Override

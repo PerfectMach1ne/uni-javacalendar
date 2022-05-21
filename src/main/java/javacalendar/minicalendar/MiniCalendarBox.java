@@ -19,9 +19,8 @@ import javacalendar.util.StringConstants;
 
 public class MiniCalendarBox extends JPanel {
     private final JPanel internalPanel;
-//    private final int DEF_CALBOX_FONT_HEIGHT = 9;
-    private final int DEF_CALBOX_LABEL_HEIGHT = 16;
-    private final double CALBOX_FONT2LABEL_HEIGHT_RATIO = 0.5625;
+    private final int LABEL_HEIGHT = 16;
+    private final double FONT_TO_LABEL_HEIGHT_RATIO = 0.5625;
 
     public MiniCalendarBox() {
         this.setLayout(new BorderLayout());
@@ -32,26 +31,15 @@ public class MiniCalendarBox extends JPanel {
         internalPanel.setLayout(new GridLayout(7,7,2,2));   // 7x7, na górze dni tygodnia
         internalPanel.setBackground(Color.lightGray);
 
-        // First row
-        initializeFirstRowOfLabels(StringConstants.weekdays);
-        // Second row
-//        String[] secondRowLabels = new String[7]; // placeholder BUT also a potential implementation direction
-//        for (int i = 0; i < 7; i++) {
-//            secondRowLabels[i] = "00";
-//        }
         calendarInitializer();
-
-//        for (Component c : internalPanel.getComponents()) {
-//            System.out.println(c.getMaximumSize().getWidth() + " " + c.getMaximumSize().getHeight());
-//        }
 
         this.add(internalPanel, BorderLayout.CENTER);
 
         this.addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent componentEvent) {
                 for (Component c : internalPanel.getComponents()) {
-                    if (c.getHeight() > DEF_CALBOX_LABEL_HEIGHT) {
-                        int scaledFontSize = (int)Math.round(c.getHeight() * CALBOX_FONT2LABEL_HEIGHT_RATIO);
+                    if (c.getHeight() > LABEL_HEIGHT) {
+                        int scaledFontSize = (int)Math.round(c.getHeight() * FONT_TO_LABEL_HEIGHT_RATIO);
                         c.setFont(new Font("Arial", Font.BOLD, scaledFontSize));
                     } else {
                         c.setFont(new Font("Arial", Font.BOLD, 12));
@@ -106,6 +94,8 @@ public class MiniCalendarBox extends JPanel {
             weekday = gregCal.get(Calendar.DAY_OF_WEEK);
         } while (weekday != firstDayOfWeek);
         // crucial calendar code above
+
+        initializeFirstRowOfLabels(StringConstants.weekdays);
 
         for (int i = 1; i <= indent; i++) {
             internalPanel.add(new JLabel() {
