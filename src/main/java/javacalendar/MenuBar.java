@@ -37,10 +37,8 @@ public class MenuBar extends JMenuBar implements ActionListener {
         calSubMenu1.add(calSubMenuItem1); calSubMenu1.add(calSubMenuItem2); calSubMenu1.add(calSubMenuItem3);
         // helpMenu items and submenus
         helpMenuItem1 = new JMenuItem("How to use");
-        /** Okienko z tekstem opisujcym funkcjonalnosc programu **/
         // aboutMenu items and submenus
         aboutMenuItem1 = new JMenuItem("About");
-        /** Popup z typowym about **/
 
         Font font = new Font("Arial", Font.BOLD, 14);
         calendarMenu.setFont(font);

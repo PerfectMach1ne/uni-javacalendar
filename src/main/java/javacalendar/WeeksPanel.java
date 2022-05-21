@@ -11,15 +11,22 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 
 import javacalendar.util.StringConstants;
 
-public class WeeksPanel extends JPanel {
-    private final JPanel weekdayContainer;
-    private final JPanel weekdayLabels;
-    private final JPanel hourLabels;
-    private final JLabel[] weekdayLabelArray = new JLabel[8];
-    private final JLabel[] hourLabelArray = new JLabel[24];
+public class WeeksPanel extends JPanel implements ComponentListener {
+    private final int PARENT_PANEL_WIDTH = 1122;
+    private final int PARENT_PANEL_HEIGHT = 730;
+    private final int WEEKDAY_PANEL_WIDTH = 160;
+    private final int WEEKDAY_PANEL_HEIGHT = 730;
+
+    private JPanel weekdayContainer;
+    private JPanel weekdayLabelPanel;
+    private JPanel hourLabelPanel;
+    private JLabel[] weekdayLabelArray = new JLabel[8];
+    private JLabel[] hourLabelArray = new JLabel[24];
     public static final JPanel[] weekdayPanelArray = new JPanel[7];
 
     public WeeksPanel() {
@@ -27,14 +34,8 @@ public class WeeksPanel extends JPanel {
         this.setBackground(Color.gray);
 
         // Create and add panel for days of the week
-        weekdayLabels = new JPanel() {
-            {
-                setLayout(new FlowLayout());
-                setBackground(Color.decode("#bbbaf0"));
-                setPreferredSize(new Dimension(1190, 50));
-            }
-        };
-        this.add(weekdayLabels, BorderLayout.NORTH);
+        createWeekdayLabelPanel();
+        this.add(weekdayLabelPanel, BorderLayout.NORTH);
 
         // Label the days of the week
         /* This is disgusting but it allows the JLabels to at least imitate correct position.
@@ -49,7 +50,7 @@ public class WeeksPanel extends JPanel {
                         setPreferredSize(new Dimension(50, 50));
                     }
                 };
-                weekdayLabels.add(weekdayLabelArray[i]);
+                weekdayLabelPanel.add(weekdayLabelArray[i]);
                 continue;
             }
             weekdayLabelArray[i] = new JLabel(StringConstants.weekdays[i - 1]) {
@@ -61,18 +62,18 @@ public class WeeksPanel extends JPanel {
                     setVerticalTextPosition(JLabel.BOTTOM);
                 }
             };
-            weekdayLabels.add(weekdayLabelArray[i]);
+            weekdayLabelPanel.add(weekdayLabelArray[i]);
         }
 
         // Create and add panel for hours of the day
-        hourLabels = new JPanel() {
+        hourLabelPanel = new JPanel() {
             {
                 setLayout(new FlowLayout());
                 setBackground(Color.decode("#a9a7ed"));
                 setPreferredSize(new Dimension(50, 730));
             }
         };
-        this.add(hourLabels, BorderLayout.WEST);
+        this.add(hourLabelPanel, BorderLayout.WEST);
 
         // Label the hours of the day
         for (int i = 0; i < 24; i++) {
@@ -86,37 +87,70 @@ public class WeeksPanel extends JPanel {
                     setVerticalTextPosition(JLabel.BOTTOM);
                 }
             };
-            hourLabels.add(hourLabelArray[i]);
+            hourLabelPanel.add(hourLabelArray[i]);
         }
 
         // Create and add the 7-day week display for events
-        weekdayContainer = new JPanel() {
-            {
-                setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
-                setBackground(Color.decode("#f3f6f4"));
-            }
-
-        };
+        createWeekdayContainer();
         this.add(weekdayContainer, BorderLayout.CENTER);
 
-        initializeWeekdayPanels();
+        weekdayContainer.addComponentListener(this);
     }
 
-    // Creates the
-    private void initializeWeekdayPanels() {    // works
+    private void createWeekdayContainer() {
+        weekdayContainer = new JPanel();
+        weekdayContainer.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        weekdayContainer.setBackground(Color.decode("#f3f6f4"));
+
+        createWeekdayPanels();
+    }
+
+    private void createWeekdayPanels(){
         for (int i = 0; i < 7; i++) {
-            // "Variable 'i' is accessed from within inner class, needs to be final or effectively final"
-            int finalI = i;
-            weekdayPanelArray[i] = new JPanel() {
-                {
-                    setLayout(null);
-                    setPreferredSize(new Dimension(160, 730));
-                    setBackground( finalI % 2 == 0 ? Color.decode("#f3f6f4") : Color.decode("#e7e7e7") );
-                    setOpaque(true);
-                }
-            };
+            weekdayPanelArray[i] = new JPanel();
+            weekdayPanelArray[i].setLayout(null);
+            weekdayPanelArray[i].setPreferredSize(new Dimension(WEEKDAY_PANEL_WIDTH, WEEKDAY_PANEL_HEIGHT));
+            // Makes the panel colors alternate between lighter and darker gray
+            weekdayPanelArray[i].setBackground( i % 2 == 0 ? Color.decode("#f3f6f4") : Color.decode("#e7e7e7") );
+            weekdayPanelArray[i].setOpaque(true);
             weekdayContainer.add(weekdayPanelArray[i]);
         }
+    }
+
+    private void createWeekdayLabelPanel() {
+        weekdayLabelPanel = new JPanel();
+        weekdayLabelPanel.setLayout(new FlowLayout());
+        weekdayLabelPanel.setBackground(Color.decode("#bbbaf0"));
+        weekdayLabelPanel.setPreferredSize(new Dimension(1190, 50));
+    }
+
+    @Override
+    public void componentResized(ComponentEvent e) {
+        // Debugging info about weekdayContainer dimensions, to delete later (maybe)
+        System.out.println(weekdayContainer.getWidth() + " " + weekdayContainer.getHeight());
+        double updatedPanelWidth = weekdayContainer.getWidth() * WEEKDAY_PANEL_WIDTH / PARENT_PANEL_WIDTH;
+        double updatedPanelHeight = weekdayContainer.getHeight() * WEEKDAY_PANEL_HEIGHT / PARENT_PANEL_HEIGHT;
+        System.out.println(updatedPanelWidth + " " + updatedPanelHeight);
+        for (int i = 0; i < 7; i++) {
+            weekdayPanelArray[i].setPreferredSize(new Dimension(
+                    (int)Math.floor(updatedPanelWidth),
+                    (int)Math.floor(updatedPanelHeight))
+            );
+        }
+    }
+
+    @Override
+    public void componentMoved(ComponentEvent e) {
+
+    }
+
+    @Override
+    public void componentShown(ComponentEvent e) {
+
+    }
+
+    @Override
+    public void componentHidden(ComponentEvent e) {
 
     }
 }
