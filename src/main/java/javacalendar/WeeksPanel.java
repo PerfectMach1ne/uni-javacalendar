@@ -1,7 +1,3 @@
-//
-// The worst class in the entire app.
-// Very likely overdue for a complete rewrite, because this is some stinky shit.
-//
 package javacalendar;
 
 import javax.swing.JLabel;
@@ -19,13 +15,24 @@ import javacalendar.util.StringConstants;
 public class WeeksPanel extends JPanel implements ComponentListener {
     private final int PARENT_PANEL_WIDTH = 1122;
     private final int PARENT_PANEL_HEIGHT = 730;
-    private final int WEEKDAY_PANEL_WIDTH = 160;
-    private final int WEEKDAY_PANEL_HEIGHT = 730;
+
+    private final int WEEKDAY_DISPLAY_WIDTH = 160;
+    private final int WEEKDAY_DISPLAY_HEIGHT = 730;
+
+    private final int WEEKDAY_LABEL_PANEL_WIDTH = 1122;
+    private final int WEEKDAY_LABEL_PANEL_HEIGHT = 50;
+    private final int WEEKDAY_LABEL_WIDTH = 154;
+    private final int WEEKDAY_LABEL_HEIGHT = WEEKDAY_LABEL_PANEL_HEIGHT;
+
+    private final int HOUR_PANEL_WIDTH = 50;
+    private final int HOUR_PANEL_HEIGHT = 730;
+    private final int HOUR_LABEL_WIDTH = HOUR_PANEL_WIDTH;
+    private final int HOUR_LABEL_HEIGHT = 25;
 
     private JPanel weekdayContainer;
     private JPanel weekdayLabelPanel;
     private JPanel hourLabelPanel;
-    private JLabel[] weekdayLabelArray = new JLabel[8];
+    private JLabel[] weekdayLabelArray = new JLabel[7];
     private JLabel[] hourLabelArray = new JLabel[24];
     public static final JPanel[] weekdayPanelArray = new JPanel[7];
 
@@ -34,61 +41,12 @@ public class WeeksPanel extends JPanel implements ComponentListener {
         this.setBackground(Color.gray);
 
         // Create and add panel for days of the week
-        createWeekdayLabelPanel();
+        createWeekdayPanels();
         this.add(weekdayLabelPanel, BorderLayout.NORTH);
 
-        // Label the days of the week
-        /* This is disgusting but it allows the JLabels to at least imitate correct position.
-           I have to fix this in the future, because this feels more criminal than using fflush(stdin)
-           in my 120 minute C programming class test, in January 2021.
-        */
-        for (int i = 0; i < 8; i++) {
-            if (i == 0) {
-                weekdayLabelArray[i] = new JLabel("") {
-                    {
-                        setFont(new Font("Arial", Font.BOLD, 24));
-                        setPreferredSize(new Dimension(50, 50));
-                    }
-                };
-                weekdayLabelPanel.add(weekdayLabelArray[i]);
-                continue;
-            }
-            weekdayLabelArray[i] = new JLabel(StringConstants.weekdays[i - 1]) {
-                {
-                    setFont(new Font("Arial", Font.BOLD, 24));
-                    setPreferredSize(new Dimension(154, 50));
-
-                    setHorizontalTextPosition(JLabel.RIGHT);
-                    setVerticalTextPosition(JLabel.BOTTOM);
-                }
-            };
-            weekdayLabelPanel.add(weekdayLabelArray[i]);
-        }
-
         // Create and add panel for hours of the day
-        hourLabelPanel = new JPanel() {
-            {
-                setLayout(new FlowLayout());
-                setBackground(Color.decode("#a9a7ed"));
-                setPreferredSize(new Dimension(50, 730));
-            }
-        };
+        createHourPanels();
         this.add(hourLabelPanel, BorderLayout.WEST);
-
-        // Label the hours of the day
-        for (int i = 0; i < 24; i++) {
-            hourLabelArray[i] = new JLabel((i < 10) ?
-                    ("0" + Integer.valueOf(i).toString() + ":00") :
-                    Integer.valueOf(i).toString() + ":00") {
-                {
-                    setFont(new Font("Consolas", Font.BOLD, 12));
-                    setPreferredSize(new Dimension(50, 25));
-                    setHorizontalTextPosition(JLabel.LEFT);
-                    setVerticalTextPosition(JLabel.BOTTOM);
-                }
-            };
-            hourLabelPanel.add(hourLabelArray[i]);
-        }
 
         // Create and add the 7-day week display for events
         createWeekdayContainer();
@@ -102,14 +60,14 @@ public class WeeksPanel extends JPanel implements ComponentListener {
         weekdayContainer.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
         weekdayContainer.setBackground(Color.decode("#f3f6f4"));
 
-        createWeekdayPanels();
+        createWeekdayDisplay();
     }
 
-    private void createWeekdayPanels(){
+    private void createWeekdayDisplay(){
         for (int i = 0; i < 7; i++) {
             weekdayPanelArray[i] = new JPanel();
             weekdayPanelArray[i].setLayout(null);
-            weekdayPanelArray[i].setPreferredSize(new Dimension(WEEKDAY_PANEL_WIDTH, WEEKDAY_PANEL_HEIGHT));
+            weekdayPanelArray[i].setPreferredSize(new Dimension(WEEKDAY_DISPLAY_WIDTH, WEEKDAY_DISPLAY_HEIGHT));
             // Makes the panel colors alternate between lighter and darker gray
             weekdayPanelArray[i].setBackground( i % 2 == 0 ? Color.decode("#f3f6f4") : Color.decode("#e7e7e7") );
             weekdayPanelArray[i].setOpaque(true);
@@ -117,40 +75,85 @@ public class WeeksPanel extends JPanel implements ComponentListener {
         }
     }
 
-    private void createWeekdayLabelPanel() {
+    private void createWeekdayPanels() {
         weekdayLabelPanel = new JPanel();
         weekdayLabelPanel.setLayout(new FlowLayout());
         weekdayLabelPanel.setBackground(Color.decode("#bbbaf0"));
-        weekdayLabelPanel.setPreferredSize(new Dimension(1190, 50));
+        weekdayLabelPanel.setPreferredSize(new Dimension(WEEKDAY_LABEL_PANEL_WIDTH, WEEKDAY_LABEL_PANEL_HEIGHT));
+        // Put 50x50 px "box" in the top right corner to keep the labels from going too far to the left.
+        JLabel topRightBox = new JLabel();
+        topRightBox.setPreferredSize(new Dimension(HOUR_PANEL_WIDTH, WEEKDAY_LABEL_PANEL_HEIGHT));
+        weekdayLabelPanel.add(topRightBox);
+        // Label the days of the week
+        createWeekdayLabels();
+    }
+
+    private void createWeekdayLabels() {
+        for (int i = 0; i < 7; i++) {
+            weekdayLabelArray[i] = new JLabel(StringConstants.weekdays[i]);
+            weekdayLabelArray[i].setFont(new Font("Arial", Font.BOLD, 24));
+            weekdayLabelArray[i].setPreferredSize(new Dimension(WEEKDAY_LABEL_WIDTH, WEEKDAY_LABEL_HEIGHT));
+            weekdayLabelArray[i].setHorizontalTextPosition(JLabel.RIGHT);
+            weekdayLabelArray[i].setVerticalTextPosition(JLabel.BOTTOM);
+            weekdayLabelPanel.add(weekdayLabelArray[i]);
+        }
+    }
+
+    private void createHourPanels() {
+        hourLabelPanel = new JPanel();
+        hourLabelPanel.setLayout(new FlowLayout());
+        hourLabelPanel.setBackground(Color.decode("#a9a7ed"));
+        hourLabelPanel.setPreferredSize(new Dimension(HOUR_PANEL_WIDTH, HOUR_PANEL_HEIGHT));
+        // Label the hours of the day
+        createHourLabels();
+    }
+
+    private void createHourLabels() {
+        for (int i = 0; i < 24; i++) {
+            // Ensures a leading zero is added to hours from the [0,9] interval.
+            hourLabelArray[i] = new JLabel((i < 10) ?
+                    ("0" + Integer.valueOf(i).toString() + ":00") :
+                    Integer.valueOf(i).toString() + ":00");
+            hourLabelArray[i].setFont(new Font("Consolas", Font.BOLD, 12));
+            hourLabelArray[i].setPreferredSize(new Dimension(HOUR_LABEL_WIDTH, HOUR_LABEL_HEIGHT));
+            hourLabelArray[i].setHorizontalTextPosition(JLabel.LEFT);
+            hourLabelArray[i].setVerticalTextPosition(JLabel.BOTTOM);
+
+            hourLabelPanel.add(hourLabelArray[i]);
+        }
     }
 
     @Override
     public void componentResized(ComponentEvent e) {
-        // Debugging info about weekdayContainer dimensions, to delete later (maybe)
-        System.out.println(weekdayContainer.getWidth() + " " + weekdayContainer.getHeight());
-        double updatedPanelWidth = weekdayContainer.getWidth() * WEEKDAY_PANEL_WIDTH / PARENT_PANEL_WIDTH;
-        double updatedPanelHeight = weekdayContainer.getHeight() * WEEKDAY_PANEL_HEIGHT / PARENT_PANEL_HEIGHT;
-        System.out.println(updatedPanelWidth + " " + updatedPanelHeight);
+//        System.out.println(weekdayContainer.getWidth() + " " + weekdayContainer.getHeight());
+        // Calculate the proportion used for scaling components based on weekdayContainer width & height updates
+        double updatedPanelWidth = weekdayContainer.getWidth() * WEEKDAY_DISPLAY_WIDTH / PARENT_PANEL_WIDTH;
+        double updatedPanelHeight = weekdayContainer.getHeight() * WEEKDAY_DISPLAY_HEIGHT / PARENT_PANEL_HEIGHT;
+//        System.out.println(updatedPanelWidth + " " + updatedPanelHeight);
+        // Scale and resize event display panels
         for (int i = 0; i < 7; i++) {
             weekdayPanelArray[i].setPreferredSize(new Dimension(
                     (int)Math.floor(updatedPanelWidth),
                     (int)Math.floor(updatedPanelHeight))
             );
         }
+        // Update the proportion for day of the wek labels. Keep the height constant.
+        updatedPanelWidth = weekdayContainer.getWidth() * WEEKDAY_LABEL_PANEL_WIDTH / PARENT_PANEL_WIDTH;
+        // Scale and resize weekday labels
+        for (int i = 0; i < 7; i++) {
+            weekdayLabelArray[i].setPreferredSize(new Dimension(
+                    (int)Math.floor(updatedPanelWidth),
+                    WEEKDAY_LABEL_PANEL_HEIGHT)
+            );
+        }
     }
 
     @Override
-    public void componentMoved(ComponentEvent e) {
-
-    }
+    public void componentMoved(ComponentEvent e) {}
 
     @Override
-    public void componentShown(ComponentEvent e) {
-
-    }
+    public void componentShown(ComponentEvent e) {}
 
     @Override
-    public void componentHidden(ComponentEvent e) {
-
-    }
+    public void componentHidden(ComponentEvent e) {}
 }
