@@ -3,8 +3,10 @@ My Swing desktop application project for an undergrad class in Java programming.
 
 **21/05/2022 update**
 I give up lol Swing and this app's GUI and event implementation is too dreadful to navigate through. Was a good learning experience, though.
+
 **23/05/2022 update**
 Might consider returning to this project someday, though instead of continuing work on this app I would rather start it over with JavaFX or some Web framework.
+
 ### ~~My plans/ToDo list~~
 1. ~~Complete GUI rewrite (there's lots of brutal Swing misuse in this project for me to rid of, also I'd like to try making the window resizeable).~~
 2. ~~Implementation of years, months & weeks display, as well as a way to "scroll" through different weeks of the year.~~
