@@ -19,4 +19,4 @@ Might consider returning to this project someday, though instead of continuing w
 
 ![alt text][screenshot]
 
-[screenshot]: https://celest1nee.files.wordpress.com/2022/09/image-3.png?w=1024 "App screenshot"
+[screenshot]: https://celest1nee.files.wordpress.com/2022/09/image-2.png?w=1024 "App screenshot"
