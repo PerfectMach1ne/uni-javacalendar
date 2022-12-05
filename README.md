@@ -16,3 +16,7 @@ Might consider returning to this project someday, though instead of continuing w
 
 
 [^1]: Originally I wanted to include a database connection back when I first started working on this project, as it was a requirement for my class. However, I ran out of time, but I still want to do that for pure practice.
+
+![alt text][screenshot]
+
+[screenshot]: https://celest1nee.files.wordpress.com/2022/09/image-3.png?w=1024 "App screenshot"
