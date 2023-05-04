@@ -1,3 +1,5 @@
+# The Sacred Rule of this repo: you are only allowed to read the JavaCalendar code while listening to this OST: https://www.youtube.com/watch?v=9B4STUYsLig
+---
 # JavaCalendar
 My Swing desktop application project for an undergrad class in Java programming. It's a calendar with a week view and ability to add and remove events to it.
 
